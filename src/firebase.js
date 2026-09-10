@@ -1,0 +1,21 @@
+// Firebase configuration
+// Replace the firebaseConfig values below with your own Firebase project credentials.
+// To get them: Go to https://console.firebase.google.com → Create/select a project
+// → Project Settings → Your Apps → Add Web App → copy the config object.
+// Also enable Email/Password sign-in under Authentication → Sign-in method.
+
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID",
+};
+
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export default app;
