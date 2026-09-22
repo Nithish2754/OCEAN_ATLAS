@@ -13,12 +13,12 @@ export default function Technology() {
     <section
       id="technology"
       className="section-shell relative overflow-hidden"
-      style={{ background: 'linear-gradient(180deg, #061428 0%, #030d1f 100%)' }}
+      style={{ background: 'linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%)' }}
     >
       {/* Background accent */}
       <div
         className="absolute top-1/2 right-0 rounded-full pointer-events-none"
-        style={{ width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(0,212,255,0.04) 0%, transparent 70%)', transform: 'translate(30%, -50%)' }}
+        style={{ width: '500px', height: '500px', background: 'radial-gradient(circle, var(--border-light) 0%, transparent 70%)', transform: 'translate(30%, -50%)' }}
       />
 
       <div className="container-app">
@@ -26,13 +26,13 @@ export default function Technology() {
         <div className="section-heading">
           <p className="section-label">Hardware Highlights</p>
           <h2
-            className="font-bold text-white"
+            className="font-bold text-[var(--text-primary)]"
             style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 'clamp(1.75rem, 3vw, 2.75rem)'}}
           >
             Purpose-Built for the{' '}
             <span className="gradient-text-cyan">Abyssal Environment</span>
           </h2>
-          <p className="text-[#7ab8d4]" style={{ maxWidth: '580px', margin: '0 auto', fontSize: '0.975rem', lineHeight: '1.7' }}>
+          <p className="text-[var(--text-accent)]" style={{ maxWidth: '580px', margin: '0 auto', fontSize: '0.975rem', lineHeight: '1.7' }}>
             Every component of the OceanAtlas sensor suite is selected and configured for
             deep-ocean conditions — extreme pressure, near-zero visibility, and the detection
             of weak electromagnetic anomalies through metres of sediment.
@@ -68,7 +68,7 @@ export default function Technology() {
               >
                 {tech.title}
               </h3>
-              <p style={{ fontSize: '0.875rem', color: '#6a9ab5', lineHeight: '1.65' }}>{tech.desc}</p>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: '1.65' }}>{tech.desc}</p>
             </div>
           ))}
         </div>
@@ -77,12 +77,12 @@ export default function Technology() {
         <div
           style={{
             borderRadius: '16px', padding: '1.25rem 1.75rem', textAlign: 'center',
-            background: 'rgba(0,212,255,0.04)', border: '1px solid rgba(0,212,255,0.12)'}}
+            background: 'var(--border-light)', border: '1px solid var(--border-medium)'}}
         >
-          <span style={{ color: '#00d4ff', fontWeight: 600, fontSize: '0.875rem' }}>
+          <span style={{ color: 'var(--accent-cyan)', fontWeight: 600, fontSize: '0.875rem' }}>
             ⊕ Orthogonal Sensor Configuration
           </span>
-          <p style={{ marginTop: '0.6rem', color: '#5a8aaa', fontSize: '0.875rem', maxWidth: '580px', margin: '0.6rem auto 0', lineHeight: '1.65' }}>
+          <p style={{ marginTop: '0.6rem', color: 'var(--text-muted)', fontSize: '0.875rem', maxWidth: '580px', margin: '0.6rem auto 0', lineHeight: '1.65' }}>
             Sensors are mounted in a multi-axis orthogonal arrangement, enabling simultaneous
             measurement in multiple spatial planes — ensuring full-coverage EM and magnetic field
             sampling regardless of ROV heading or terrain topology.

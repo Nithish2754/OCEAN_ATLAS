@@ -20,6 +20,28 @@
 }
 
 :root {
+  /* Default Dark Mode Colors */
+  --bg-primary: #01050f;
+  --bg-secondary: #030d1f;
+  --bg-tertiary: #061428;
+  --bg-card: rgba(6, 20, 40, 0.7);
+  --bg-panel: #0a1a2f;
+  
+  --text-primary: #e0f0ff;
+  --text-secondary: #a0c4d8;
+  --text-muted: #5a8aaa;
+  --text-accent: #7ab8d4;
+  
+  --border-light: rgba(0, 212, 255, 0.12);
+  --border-medium: rgba(0, 212, 255, 0.3);
+  
+  --accent-cyan: #00d4ff;
+  --accent-cyan-hover: #0099bb;
+  --accent-gold: #c9913a;
+  --accent-gold-hover: #e8b25a;
+  
+  --card-hover-shadow: 0 0 30px rgba(0, 212, 255, 0.08);
+
   --container-max: 1200px;
   --container-hero-max: 860px;
   --page-pad: clamp(1rem, 2vw, 2rem);
@@ -35,6 +57,33 @@
   --space-10: 80px;
 }
 
+:root.light {
+  /* Light Mode Colors (Strict 3-Color Palette) */
+  /* Color 1: Background */
+  --bg-primary: #ffffff;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-panel: #ffffff;
+  
+  /* Color 2: Text */
+  --text-primary: #0f172a;
+  --text-secondary: #0f172a;
+  --text-muted: #0f172a;
+  --text-accent: #0f172a;
+  
+  /* Color 3: Accent */
+  --accent-cyan: #0099bb;
+  --accent-cyan-hover: #0099bb;
+  --accent-gold: #0099bb;
+  --accent-gold-hover: #0099bb;
+  
+  /* Derived opacities using only the Accent color */
+  --border-light: rgba(0, 153, 187, 0.2);
+  --border-medium: rgba(0, 153, 187, 0.4);
+  --card-hover-shadow: 0 4px 20px rgba(0, 153, 187, 0.15);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -47,9 +96,11 @@ html {
 
 body {
   font-family: 'Outfit', sans-serif;
-  background-color: #01050f;
-  color: #e0f0ff;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
 }
 
 img {
@@ -133,13 +184,13 @@ img {
 
 /* Card glass effect */
 .glass-card {
-  background: rgba(6, 20, 40, 0.7);
+  background: var(--bg-card);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(0, 212, 255, 0.12);
+  border: 1px solid var(--border-light);
 }
 
 .section-shell {
-  padding-block: clamp(var(--space-8), 7vw, var(--space-10));
+  padding-block: clamp(3rem, 8vw, var(--space-10));
 }
 
 .section-heading {
@@ -349,15 +400,15 @@ input:focus-visible {
   outline-offset: 3px;
 }
 .glass-card:hover {
-  border-color: rgba(0, 212, 255, 0.35);
-  box-shadow: 0 0 30px rgba(0, 212, 255, 0.08);
+  border-color: var(--border-medium);
+  box-shadow: var(--card-hover-shadow);
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #01050f; }
-::-webkit-scrollbar-thumb { background: #00d4ff33; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #00d4ff66; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-medium); }
 
 /* Section headers */
 .section-label {
@@ -365,24 +416,24 @@ input:focus-visible {
   font-size: 0.75rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #00d4ff;
+  color: var(--accent-cyan);
 }
 
 /* Gradient text */
 .gradient-text-cyan {
-  background: linear-gradient(135deg, #00d4ff, #0099bb);
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-cyan-hover));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 .gradient-text-gold {
-  background: linear-gradient(135deg, #e8b25a, #c9913a);
+  background: linear-gradient(135deg, var(--accent-gold-hover), var(--accent-gold));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 .gradient-text-hero {
-  background: linear-gradient(135deg, #ffffff 0%, #00d4ff 50%, #c9913a 100%);
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-cyan) 50%, var(--accent-gold) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -394,7 +445,7 @@ input:focus-visible {
 }
 
 .hero-section {
-  padding: clamp(5rem, 9vh, 6.5rem) 0 3rem;
+  padding: clamp(6rem, 12vh, 8rem) 0 3rem;
 }
 
 .hero-content {
@@ -446,7 +497,7 @@ input:focus-visible {
   top: 24px;
   bottom: 24px;
   width: 2px;
-  background: linear-gradient(180deg, transparent, rgba(0,212,255,0.3) 10%, rgba(0,212,255,0.2) 90%, transparent);
+  background: linear-gradient(180deg, transparent, var(--border-medium) 10%, var(--border-light) 90%, transparent);
 }
 
 .step-row {
@@ -469,9 +520,9 @@ input:focus-visible {
   font-weight: 700;
   font-size: 0.8rem;
   font-family: monospace;
-  color: #01050f;
+  color: var(--bg-primary);
   flex-shrink: 0;
-  box-shadow: 0 0 18px rgba(0, 212, 255, 0.5);
+  box-shadow: 0 0 18px var(--border-medium);
   z-index: 1;
 }
 
@@ -594,6 +645,23 @@ input:focus-visible {
   .hero-stats .stat-item:last-child {
     grid-column: 1 / -1;
   }
+  
+  .auth-card {
+    padding: var(--space-5);
+  }
+  
+  .dashboard-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  /* Make text smaller on mobile */
+  .section-heading h2 {
+    font-size: clamp(1.5rem, 5vw, 2.25rem) !important;
+  }
+  
+  .hero-content h1 {
+    font-size: clamp(1.8rem, 8vw, 3rem) !important;
+  }
 
   .step-rail {
     padding-left: 2.25rem;
@@ -624,3 +692,101 @@ input:focus-visible {
     align-items: flex-start;
   }
 }
+
+/* ─── Sensor Telemetry Panel ─────────────────────────────────────────────── */
+
+.telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 1100px) {
+  .telemetry-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .telemetry-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .telemetry-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.telemetry-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.telemetry-card-icon {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.telemetry-card-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.telemetry-card-value {
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-family: 'Space Grotesk', sans-serif;
+  line-height: 1.2;
+}
+
+.telemetry-card-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Metal detected – red pulsing glow */
+@keyframes metal-pulse {
+  0%,  100% { box-shadow: 0 0 12px rgba(255, 93, 115, 0.25), 0 0 0 1px rgba(255, 93, 115, 0.2); }
+  50%        { box-shadow: 0 0 30px rgba(255, 93, 115, 0.55), 0 0 0 2px rgba(255, 93, 115, 0.45); }
+}
+
+.telemetry-card--alert {
+  border-color: rgba(255, 93, 115, 0.5) !important;
+  animation: metal-pulse 1.2s ease-in-out infinite;
+}
+
+/* Acceleration axis rows */
+.telemetry-accel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.telemetry-accel > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.telemetry-axis {
+  display: inline-block;
+  width: 16px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+

@@ -21,7 +21,7 @@ export default function Footer() {
   return (
     <footer
       className="py-16 pb-8"
-      style={{ background: '#01050f', borderTop: '1px solid rgba(0,212,255,0.08)' }}
+      style={{ background: 'var(--bg-primary)', borderTop: '1px solid var(--border-light)' }}
     >
       <div className="container-app">
         {/* 3-column grid */}
@@ -29,14 +29,14 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-              <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(0,212,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Waves size={18} color="#00d4ff" />
+              <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'var(--border-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Waves size={18} color="var(--accent-cyan)" />
               </div>
-              <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: '1.15rem', color: '#fff' }}>
-                Ocean<span style={{ color: '#00d4ff' }}>Atlas</span>
+              <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: '1.15rem', color: 'var(--text-primary)' }}>
+                Ocean<span style={{ color: 'var(--accent-cyan)' }}>Atlas</span>
               </span>
             </div>
-            <p style={{ color: '#4a7a95', fontSize: '0.875rem', lineHeight: '1.7', maxWidth: '280px' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', lineHeight: '1.7', maxWidth: '280px' }}>
               A low-cost tethered ROV system for deep-ocean electromagnetic detection and
               Metal-Priority Mapping of seabed mineral deposits.
             </p>
@@ -44,7 +44,7 @@ export default function Footer() {
 
           {/* Nav links */}
           <div>
-            <p style={{ color: '#fff', fontWeight: 600, fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1.25rem' }}>
+            <p style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1.25rem' }}>
               Navigation
             </p>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -53,18 +53,18 @@ export default function Footer() {
                   {link.href.startsWith('/#') ? (
                     <button
                       onClick={() => scrollTo(link.href.replace('/#', ''))}
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#4a7a95', fontSize: '0.875rem', padding: 0, textAlign: 'left', transition: 'color 0.2s' }}
-                      onMouseEnter={e => e.target.style.color = '#00d4ff'}
-                      onMouseLeave={e => e.target.style.color = '#4a7a95'}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: '0.875rem', padding: 0, textAlign: 'left', transition: 'color 0.2s' }}
+                      onMouseEnter={e => e.target.style.color = 'var(--accent-cyan)'}
+                      onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}
                     >
                       {link.label}
                     </button>
                   ) : (
                     <Link
                       to={link.href}
-                      style={{ color: '#4a7a95', fontSize: '0.875rem', textDecoration: 'none', transition: 'color 0.2s' }}
-                      onMouseEnter={e => e.target.style.color = '#00d4ff'}
-                      onMouseLeave={e => e.target.style.color = '#4a7a95'}
+                      style={{ color: 'var(--text-muted)', fontSize: '0.875rem', textDecoration: 'none', transition: 'color 0.2s' }}
+                      onMouseEnter={e => e.target.style.color = 'var(--accent-cyan)'}
+                      onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}
                     >
                       {link.label}
                     </Link>
@@ -76,15 +76,15 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <p style={{ color: '#fff', fontWeight: 600, fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1.25rem' }}>
+            <p style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1.25rem' }}>
               Project Contact
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <a
                 href="mailto:contact@oceanatlas.research"
-                style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#4a7a95', fontSize: '0.875rem', textDecoration: 'none', transition: 'color 0.2s' }}
-                onMouseEnter={e => { e.currentTarget.style.color = '#00d4ff'; }}
-                onMouseLeave={e => { e.currentTarget.style.color = '#4a7a95'; }}
+                style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-muted)', fontSize: '0.875rem', textDecoration: 'none', transition: 'color 0.2s' }}
+                onMouseEnter={e => { e.currentTarget.style.color = 'var(--accent-cyan)'; }}
+                onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; }}
               >
                 <Mail size={15} />
                 contact@oceanatlas.research
@@ -93,14 +93,14 @@ export default function Footer() {
                 href="https://github.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#4a7a95', fontSize: '0.875rem', textDecoration: 'none', transition: 'color 0.2s' }}
-                onMouseEnter={e => { e.currentTarget.style.color = '#00d4ff'; }}
-                onMouseLeave={e => { e.currentTarget.style.color = '#4a7a95'; }}
+                style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-muted)', fontSize: '0.875rem', textDecoration: 'none', transition: 'color 0.2s' }}
+                onMouseEnter={e => { e.currentTarget.style.color = 'var(--accent-cyan)'; }}
+                onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; }}
               >
                 <ExternalLink size={15} />
                 Research Repository
               </a>
-              <div style={{ padding: '0.75rem 1rem', borderRadius: '10px', fontSize: '0.8rem', color: '#3a6a85', lineHeight: '1.5', background: 'rgba(0,212,255,0.04)', border: '1px solid rgba(0,212,255,0.08)', marginTop: '0.25rem' }}>
+              <div style={{ padding: '0.75rem 1rem', borderRadius: '10px', fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: '1.5', background: 'var(--border-light)', border: '1px solid var(--border-medium)', marginTop: '0.25rem' }}>
                 🎓 Academic research project. Institutional affiliation placeholder.
               </div>
             </div>
@@ -111,7 +111,7 @@ export default function Footer() {
         <div
           style={{
             paddingTop: '1.75rem',
-            borderTop: '1px solid rgba(0,212,255,0.06)',
+            borderTop: '1px solid var(--border-light)',
             display: 'flex',
             flexWrap: 'wrap',
             justifyContent: 'space-between',
@@ -119,10 +119,10 @@ export default function Footer() {
             gap: '0.75rem',
           }}
         >
-          <p style={{ color: '#2a4a5f', fontSize: '0.8rem' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>
             © 2026 OceanAtlas Research Project. All rights reserved.
           </p>
-          <p style={{ color: '#2a4a5f', fontSize: '0.8rem' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>
             Built for deep-ocean metal detection &amp; mapping research.
           </p>
         </div>

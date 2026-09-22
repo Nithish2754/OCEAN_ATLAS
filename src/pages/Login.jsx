@@ -34,13 +34,13 @@ export default function Login() {
   return (
     <div
       className="min-h-screen flex items-center justify-center relative isolate overflow-hidden px-4"
-      style={{ background: 'linear-gradient(180deg, #01050f 0%, #030d1f 60%, #061428 100%)' }}
+      style={{ background: 'linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 60%, var(--bg-tertiary) 100%)' }}
     >
       {/* Animated background */}
       <div className="absolute inset-0 topo-bg opacity-20 z-0" />
       <div
         className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none z-0"
-        style={{ background: 'radial-gradient(circle, rgba(0,212,255,0.05) 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(circle, var(--border-light) 0%, transparent 70%)' }}
       />
       {/* Sonar rings */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0">
@@ -63,24 +63,24 @@ export default function Login() {
       <div
         className="auth-card relative z-10 w-full max-w-md"
         style={{
-          background: 'rgba(6,20,40,0.85)',
+          background: 'var(--bg-card)',
           backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(0,212,255,0.15)',
+          border: '1px solid var(--border-medium)',
           borderRadius: '24px',
         }}
       >
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-[#00d4ff]/10 border border-[#00d4ff]/20 flex items-center justify-center mb-4 pulse-glow">
-            <Waves size={26} className="text-[#00d4ff]" />
+          <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 pulse-glow" style={{ background: 'var(--border-light)', border: '1px solid var(--border-medium)' }}>
+            <Waves size={26} className="text-[var(--accent-cyan)]" />
           </div>
           <h1
-            className="text-2xl font-bold text-white mb-1"
+            className="text-2xl font-bold text-[var(--text-primary)] mb-1"
             style={{ fontFamily: "'Space Grotesk', sans-serif" }}
           >
             Operator Login
           </h1>
-          <p className="text-[#5a8aaa] text-sm text-center">
+          <p className="text-[var(--text-muted)] text-sm text-center">
             Sign in to access the OceanAtlas survey dashboard
           </p>
         </div>
@@ -98,7 +98,7 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="auth-form">
           {/* Email */}
           <div className="text-left">
-            <label className="block text-xs font-semibold text-[#5a8aaa] uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">
               Email Address
             </label>
             <input
@@ -107,19 +107,19 @@ export default function Login() {
               ref={emailRef}
               required
               placeholder="you@example.com"
-              className="auth-input w-full rounded-xl text-white text-sm outline-none transition-all duration-200 placeholder:text-[#2a4a5f]"
+              className="auth-input w-full rounded-xl text-[var(--text-primary)] text-sm outline-none transition-all duration-200 placeholder:text-[var(--text-muted)]"
               style={{
-                background: 'rgba(0,212,255,0.04)',
-                border: '1px solid rgba(0,212,255,0.12)',
+                background: 'var(--border-light)',
+                border: '1px solid var(--border-medium)',
               }}
-              onFocus={(e) => (e.target.style.borderColor = 'rgba(0,212,255,0.4)')}
-              onBlur={(e) => (e.target.style.borderColor = 'rgba(0,212,255,0.12)')}
+              onFocus={(e) => (e.target.style.borderColor = 'var(--accent-cyan)')}
+              onBlur={(e) => (e.target.style.borderColor = 'var(--border-medium)')}
             />
           </div>
 
           {/* Password */}
           <div className="text-left">
-            <label className="block text-xs font-semibold text-[#5a8aaa] uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">
               Password
             </label>
             <div className="relative">
@@ -129,18 +129,18 @@ export default function Login() {
                 ref={passwordRef}
                 required
                 placeholder="••••••••"
-                className="auth-input w-full pr-12 rounded-xl text-white text-sm outline-none transition-all duration-200 placeholder:text-[#2a4a5f]"
+                className="auth-input w-full pr-12 rounded-xl text-[var(--text-primary)] text-sm outline-none transition-all duration-200 placeholder:text-[var(--text-muted)]"
                 style={{
-                  background: 'rgba(0,212,255,0.04)',
-                  border: '1px solid rgba(0,212,255,0.12)',
+                  background: 'var(--border-light)',
+                  border: '1px solid var(--border-medium)',
                 }}
-                onFocus={(e) => (e.target.style.borderColor = 'rgba(0,212,255,0.4)')}
-                onBlur={(e) => (e.target.style.borderColor = 'rgba(0,212,255,0.12)')}
+                onFocus={(e) => (e.target.style.borderColor = 'var(--accent-cyan)')}
+                onBlur={(e) => (e.target.style.borderColor = 'var(--border-medium)')}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#3a6a85] hover:text-[#00d4ff] transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--accent-cyan)] transition-colors"
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -148,7 +148,7 @@ export default function Login() {
             <div className="flex justify-end mt-2">
               <button
                 type="button"
-                className="text-xs text-[#3a6a85] hover:text-[#00d4ff] transition-colors"
+                className="text-xs text-[var(--text-muted)] hover:text-[var(--accent-cyan)] transition-colors"
               >
                 Forgot password?
               </button>
@@ -160,8 +160,8 @@ export default function Login() {
             id="login-submit-btn"
             type="submit"
             disabled={loading}
-            className="auth-submit w-full rounded-xl font-semibold text-[#01050f] flex items-center justify-center gap-2 transition-all duration-200 hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
-            style={{ background: 'linear-gradient(135deg, #00d4ff 0%, #0099bb 100%)' }}
+            className="auth-submit w-full rounded-xl font-semibold text-[var(--bg-primary)] flex items-center justify-center gap-2 transition-all duration-200 hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
+            style={{ background: 'linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-cyan-hover) 100%)' }}
           >
             {loading ? (
               <span className="flex items-center gap-2">
@@ -180,16 +180,16 @@ export default function Login() {
         </form>
 
         {/* Sign up link */}
-        <p className="mt-6 text-center text-sm text-[#3a6a85]">
+        <p className="mt-6 text-center text-sm text-[var(--text-muted)]">
           Don't have an account?{' '}
-          <Link to="/signup" className="text-[#00d4ff] hover:text-white font-semibold transition-colors">
+          <Link to="/signup" className="text-[var(--accent-cyan)] hover:text-[var(--text-primary)] font-semibold transition-colors">
             Sign up
           </Link>
         </p>
 
         {/* Back to home */}
-        <p className="mt-4 text-center text-xs text-[#2a4a5f]">
-          <Link to="/" className="hover:text-[#5a8aaa] transition-colors">
+        <p className="mt-4 text-center text-xs text-[var(--text-muted)]">
+          <Link to="/" className="hover:text-[var(--text-secondary)] transition-colors">
             ← Back to OceanAtlas
           </Link>
         </p>

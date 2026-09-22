@@ -70,15 +70,15 @@ export default function LiveDepthChart() {
   return (
     <div className="dashboard-panel glass-card rounded-2xl col-span-full mb-6">
       <div className="dashboard-panel-header flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold text-white flex items-center gap-2" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-          <Waves size={18} className="text-[#00d4ff]" />
+        <h2 className="text-lg font-bold text-[var(--text-primary)] flex items-center gap-2" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+          <Waves size={18} className="text-[var(--accent-cyan)]" />
           Live Seafloor Depth
         </h2>
         
         <div className="flex items-center gap-4">
           <div className="text-right">
-            <span className="text-sm text-[#7ab8d4] mr-2">Current Depth:</span>
-            <span className="text-xl font-bold text-[#00d4ff]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+            <span className="text-sm text-[var(--text-accent)] mr-2">Current Depth:</span>
+            <span className="text-xl font-bold text-[var(--accent-cyan)]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
               {currentDepth !== null ? `${currentDepth.toFixed(2)} cm` : '--'}
             </span>
           </div>
@@ -96,16 +96,16 @@ export default function LiveDepthChart() {
       
       <div className="w-full h-64">
         {data.length === 0 ? (
-          <div className="w-full h-full flex items-center justify-center text-[#5a8aaa] border border-dashed border-[#00d4ff]/20 rounded-xl bg-[#00d4ff]/5">
+          <div className="w-full h-full flex items-center justify-center text-[var(--text-muted)] border border-dashed rounded-xl" style={{ borderColor: 'var(--border-medium)', background: 'var(--border-light)' }}>
             Waiting for depth data...
           </div>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: -20 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-medium)" vertical={false} />
               <XAxis 
                 dataKey="time" 
-                stroke="#5a8aaa" 
+                stroke="var(--text-muted)" 
                 fontSize={12} 
                 tickMargin={10}
                 tickFormatter={(val) => {
@@ -114,24 +114,24 @@ export default function LiveDepthChart() {
                 }} 
               />
               <YAxis 
-                stroke="#5a8aaa" 
+                stroke="var(--text-muted)" 
                 fontSize={12} 
                 domain={['auto', 'auto']}
                 tickFormatter={(val) => `${val}`}
               />
               <Tooltip 
-                contentStyle={{ backgroundColor: '#030d1f', borderColor: '#00d4ff40', color: '#fff', borderRadius: '8px' }}
-                itemStyle={{ color: '#00d4ff' }}
-                labelStyle={{ color: '#7ab8d4' }}
+                contentStyle={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-medium)', color: 'var(--text-primary)', borderRadius: '8px' }}
+                itemStyle={{ color: 'var(--accent-cyan)' }}
+                labelStyle={{ color: 'var(--text-accent)' }}
               />
               <Line 
                 type="monotone" 
                 dataKey="depth" 
                 name="Depth (cm)"
-                stroke="#00d4ff" 
+                stroke="var(--accent-cyan)" 
                 strokeWidth={2}
                 dot={false}
-                activeDot={{ r: 6, fill: '#00d4ff', stroke: '#030d1f', strokeWidth: 2 }}
+                activeDot={{ r: 6, fill: 'var(--accent-cyan)', stroke: 'var(--bg-card)', strokeWidth: 2 }}
                 isAnimationActive={false} // Disable animation for better performance on live data
               />
             </LineChart>

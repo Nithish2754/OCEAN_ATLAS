@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, Waves } from 'lucide-react';
+import { Menu, X, Waves, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 const navLinks = [
   { label: 'Home', href: '/#home' },
@@ -14,6 +15,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const { currentUser } = useAuth();
+  const { isLight, toggleTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 30);
@@ -39,9 +41,9 @@ export default function Navbar() {
         right: 0,
         zIndex: 50,
         transition: 'all 0.3s',
-        background: isScrolled ? 'rgba(1,5,15,0.92)' : 'transparent',
+        background: isScrolled ? 'var(--bg-card)' : 'transparent',
         backdropFilter: isScrolled ? 'blur(20px)' : 'none',
-        borderBottom: isScrolled ? '1px solid rgba(0,212,255,0.1)' : 'none',
+        borderBottom: isScrolled ? '1px solid var(--border-light)' : 'none',
       }}
     >
       <div className="container-app h-16 flex items-center justify-between">
@@ -54,14 +56,14 @@ export default function Navbar() {
           <div
             style={{
               width: '36px', height: '36px', borderRadius: '50%',
-              background: 'rgba(0,212,255,0.1)',
+              background: 'var(--border-light)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}
           >
-            <Waves size={18} color="#00d4ff" />
+            <Waves size={18} color="var(--accent-cyan)" />
           </div>
-          <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: '1.2rem', color: '#fff' }}>
-            Ocean<span style={{ color: '#00d4ff' }}>Atlas</span>
+          <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: '1.2rem', color: 'var(--text-primary)' }}>
+            Ocean<span style={{ color: 'var(--accent-cyan)' }}>Atlas</span>
           </span>
         </Link>
 
@@ -73,11 +75,11 @@ export default function Navbar() {
               onClick={() => handleNavClick(link.href)}
               style={{
                 background: 'none', border: 'none', cursor: 'pointer',
-                fontSize: '0.9rem', color: '#a0c4d8', fontWeight: 500,
+                fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 500,
                 transition: 'color 0.2s',
               }}
-              onMouseEnter={e => e.target.style.color = '#00d4ff'}
-              onMouseLeave={e => e.target.style.color = '#a0c4d8'}
+              onMouseEnter={e => e.target.style.color = 'var(--accent-cyan)'}
+              onMouseLeave={e => e.target.style.color = 'var(--text-secondary)'}
             >
               {link.label}
             </button>
@@ -86,13 +88,16 @@ export default function Navbar() {
 
         {/* Auth buttons */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }} className="hidden md:flex">
+          <button onClick={toggleTheme} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', padding: '0.5rem', display: 'flex', alignItems: 'center' }}>
+            {isLight ? <Moon size={20} /> : <Sun size={20} />}
+          </button>
           {currentUser ? (
             <Link
               to="/dashboard"
               style={{
                 padding: '0.5rem 1.25rem', borderRadius: '8px',
-                background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.3)',
-                color: '#00d4ff', fontSize: '0.875rem', fontWeight: 600, textDecoration: 'none',
+                background: 'var(--border-light)', border: '1px solid var(--border-medium)',
+                color: 'var(--accent-cyan)', fontSize: '0.875rem', fontWeight: 600, textDecoration: 'none',
               }}
             >
               Dashboard
@@ -101,7 +106,7 @@ export default function Navbar() {
             <>
               <Link
                 to="/login"
-                style={{ color: '#a0c4d8', fontSize: '0.875rem', fontWeight: 500, textDecoration: 'none', padding: '0.5rem 0.75rem' }}
+                style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', fontWeight: 500, textDecoration: 'none', padding: '0.5rem 0.75rem' }}
               >
                 Login
               </Link>
@@ -109,8 +114,8 @@ export default function Navbar() {
                 to="/signup"
                 style={{
                   padding: '0.5rem 1.25rem', borderRadius: '8px',
-                  background: 'linear-gradient(135deg, #00d4ff, #0099bb)',
-                  color: '#01050f', fontSize: '0.875rem', fontWeight: 700, textDecoration: 'none',
+                  background: 'var(--accent-cyan)',
+                  color: 'var(--bg-primary)', fontSize: '0.875rem', fontWeight: 700, textDecoration: 'none',
                 }}
               >
                 Sign Up
@@ -120,13 +125,17 @@ export default function Navbar() {
         </div>
 
         {/* Mobile toggle */}
-        <button
-          className="md:hidden"
-          style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#00d4ff', padding: '0.5rem' }}
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          {menuOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
+        <div className="md:hidden flex items-center gap-2">
+          <button onClick={toggleTheme} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', padding: '0.5rem' }}>
+            {isLight ? <Moon size={20} /> : <Sun size={20} />}
+          </button>
+          <button
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--accent-cyan)', padding: '0.5rem' }}
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
@@ -134,28 +143,28 @@ export default function Navbar() {
         <div
           className="px-6 py-4 flex flex-col gap-4"
           style={{
-            background: 'rgba(3,13,31,0.97)', backdropFilter: 'blur(20px)',
-            borderBottom: '1px solid rgba(0,212,255,0.1)',
+            background: 'var(--bg-card)', backdropFilter: 'blur(20px)',
+            borderBottom: '1px solid var(--border-light)',
           }}
         >
           {navLinks.map((link) => (
             <button
               key={link.label}
               onClick={() => handleNavClick(link.href)}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', color: '#a0c4d8', fontWeight: 500, fontSize: '0.95rem', padding: '0.25rem 0' }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', color: 'var(--text-secondary)', fontWeight: 500, fontSize: '0.95rem', padding: '0.25rem 0' }}
             >
               {link.label}
             </button>
           ))}
-          <div style={{ borderTop: '1px solid rgba(0,212,255,0.1)', paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             {currentUser ? (
-              <Link to="/dashboard" onClick={() => setMenuOpen(false)} style={{ textAlign: 'center', padding: '0.625rem', borderRadius: '8px', background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.3)', color: '#00d4ff', fontWeight: 600, textDecoration: 'none' }}>
+              <Link to="/dashboard" onClick={() => setMenuOpen(false)} style={{ textAlign: 'center', padding: '0.625rem', borderRadius: '8px', background: 'var(--border-light)', border: '1px solid var(--border-medium)', color: 'var(--accent-cyan)', fontWeight: 600, textDecoration: 'none' }}>
                 Dashboard
               </Link>
             ) : (
               <>
-                <Link to="/login" onClick={() => setMenuOpen(false)} style={{ color: '#a0c4d8', fontWeight: 500, textDecoration: 'none' }}>Login</Link>
-                <Link to="/signup" onClick={() => setMenuOpen(false)} style={{ textAlign: 'center', padding: '0.625rem', borderRadius: '8px', background: 'linear-gradient(135deg, #00d4ff, #0099bb)', color: '#01050f', fontWeight: 700, textDecoration: 'none' }}>
+                <Link to="/login" onClick={() => setMenuOpen(false)} style={{ color: 'var(--text-secondary)', fontWeight: 500, textDecoration: 'none' }}>Login</Link>
+                <Link to="/signup" onClick={() => setMenuOpen(false)} style={{ textAlign: 'center', padding: '0.625rem', borderRadius: '8px', background: 'var(--accent-cyan)', color: 'var(--bg-primary)', fontWeight: 700, textDecoration: 'none' }}>
                   Sign Up
                 </Link>
               </>

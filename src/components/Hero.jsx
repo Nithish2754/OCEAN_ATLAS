@@ -124,8 +124,8 @@ export default function Hero() {
       id="home"
       className="hero-section relative flex items-center justify-center overflow-hidden"
       style={{
-        background: 'linear-gradient(180deg, #01050f 0%, #030d1f 40%, #061428 70%, #0a1a2f 100%)',
-        minHeight: '100vh'
+        background: 'linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 40%, var(--bg-tertiary) 70%, var(--bg-panel) 100%)',
+        minHeight: '100dvh'
       }}
     >
       {/* Hero background image with overlay */}
@@ -140,8 +140,8 @@ export default function Hero() {
       <div
         className="absolute inset-0"
         style={{
-          background:
-            'linear-gradient(180deg, rgba(1,5,15,0.7) 0%, rgba(1,5,15,0.3) 50%, rgba(1,5,15,0.85) 100%)'}}
+          background: 'linear-gradient(180deg, color-mix(in srgb, var(--bg-primary) 70%, transparent) 0%, color-mix(in srgb, var(--bg-primary) 30%, transparent) 50%, color-mix(in srgb, var(--bg-primary) 85%, transparent) 100%)'
+        }}
       />
 
       {/* Topo grid overlay */}
@@ -155,7 +155,7 @@ export default function Hero() {
         <div className="hero-badge-wrap">
           <span
             className="section-label"
-            style={{ padding: '0.4rem 1.25rem', borderRadius: '999px', border: '1px solid rgba(0,212,255,0.2)', background: 'rgba(0,212,255,0.05)' }}
+            style={{ padding: '0.4rem 1.25rem', borderRadius: '999px', border: '1px solid var(--border-medium)', background: 'var(--border-light)' }}
           >
             Deep-Ocean EM Detection &amp; Mapping System
           </span>
@@ -173,8 +173,8 @@ export default function Hero() {
         </h1>
 
         <p
-          className="text-[#7ab8d4] font-light leading-relaxed"
-          style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', maxWidth: '680px', margin: '0 auto 2.5rem' }}
+          className="font-light leading-relaxed"
+          style={{ color: 'var(--text-accent)', fontSize: 'clamp(1rem, 2vw, 1.2rem)', maxWidth: '680px', margin: '0 auto 2.5rem' }}
         >
           A low-cost tethered ROV platform combining multi-frequency electromagnetic sensing
           with adaptive two-stage scanning to detect and map metal-rich seabed deposits —
@@ -188,8 +188,8 @@ export default function Hero() {
             style={{
               display: 'flex', alignItems: 'center', gap: '0.5rem',
               borderRadius: '12px',
-              background: 'linear-gradient(135deg, #00d4ff, #0099bb)',
-              color: '#01050f', fontWeight: 700, fontSize: '0.95rem',
+              background: 'linear-gradient(135deg, var(--accent-cyan), var(--accent-cyan-hover))',
+              color: 'var(--bg-primary)', fontWeight: 700, fontSize: '0.95rem',
               border: 'none', cursor: 'pointer', transition: 'transform 0.2s'}}
             id="hero-explore-btn"
             onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.04)'}
@@ -205,7 +205,7 @@ export default function Hero() {
             style={{
               display: 'flex', alignItems: 'center', gap: '0.5rem',
               borderRadius: '12px',
-              border: '1px solid rgba(0,212,255,0.3)', color: '#00d4ff',
+              border: '1px solid var(--border-medium)', color: 'var(--accent-cyan)',
               fontWeight: 700, fontSize: '0.95rem', textDecoration: 'none',
               transition: 'background 0.2s, border-color 0.2s'}}
             id="hero-login-btn"
@@ -228,7 +228,7 @@ export default function Hero() {
               >
                 {stat.value}
               </div>
-              <div style={{ fontSize: '0.7rem', color: '#5a8aaa', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                 {stat.label}
               </div>
             </div>
@@ -237,10 +237,12 @@ export default function Hero() {
 
         <button
           onClick={() => scrollToSection('about')}
-          className="mx-auto flex flex-col items-center gap-2 text-[#00d4ff]/50 hover:text-[#00d4ff] transition-colors duration-200"
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-cyan)', opacity: 0.5, transition: 'opacity 0.2s', margin: '0 auto', background: 'none', border: 'none', cursor: 'pointer' }}
+          onMouseEnter={e => e.currentTarget.style.opacity = '1'}
+          onMouseLeave={e => e.currentTarget.style.opacity = '0.5'}
           aria-label="Scroll down"
         >
-          <span className="text-xs tracking-widest uppercase font-mono">Scroll</span>
+          <span style={{ fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'monospace' }}>Scroll</span>
           <ArrowDown size={18} className="float-animation" />
         </button>
       </div>

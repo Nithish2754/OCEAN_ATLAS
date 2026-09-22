@@ -44,6 +44,9 @@ export function AuthProvider({ children }) {
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
+        // Automatically refresh token on load to avoid 403 Forbidden on expired tokens
+        parsedUser.token = generateMockJwt(parsedUser.email);
+        localStorage.setItem('ocean_atlas_mock_user', JSON.stringify(parsedUser));
         setCurrentUser(parsedUser);
       } catch {
         localStorage.removeItem('ocean_atlas_mock_user');

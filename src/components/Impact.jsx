@@ -11,7 +11,7 @@ export default function Impact() {
     <section
       id="impact"
       className="section-shell relative overflow-hidden"
-      style={{ background: 'linear-gradient(180deg, #030d1f 0%, #061428 80%, #0a1a2f 100%)' }}
+      style={{ background: 'linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-tertiary) 80%, var(--bg-panel) 100%)' }}
     >
       {/* Watermark */}
       <div
@@ -19,7 +19,7 @@ export default function Impact() {
         aria-hidden="true"
       >
         <span
-          style={{ fontSize: '20vw', fontWeight: 900, color: '#00d4ff', opacity: 0.015, lineHeight: 1, fontFamily: "'Space Grotesk', sans-serif" }}
+          style={{ fontSize: '20vw', fontWeight: 900, color: 'var(--accent-cyan)', opacity: 0.015, lineHeight: 1, fontFamily: "'Space Grotesk', sans-serif" }}
         >
           IMPACT
         </span>
@@ -30,13 +30,13 @@ export default function Impact() {
         <div className="section-heading">
           <p className="section-label">Why It Matters</p>
           <h2
-            className="font-bold text-white"
+            className="font-bold text-[var(--text-primary)]"
             style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 'clamp(1.75rem, 3vw, 2.75rem)'}}
           >
             Democratising{' '}
             <span className="gradient-text-gold">Deep-Ocean Exploration</span>
           </h2>
-          <p className="text-[#7ab8d4]" style={{ maxWidth: '560px', margin: '0 auto', fontSize: '0.975rem', lineHeight: '1.7' }}>
+          <p className="text-[var(--text-accent)]" style={{ maxWidth: '560px', margin: '0 auto', fontSize: '0.975rem', lineHeight: '1.7' }}>
             OceanAtlas doesn't just detect metal — it fundamentally changes who can explore
             the deep ocean and how responsibly they can do it.
           </p>
@@ -64,8 +64,8 @@ export default function Impact() {
               <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.75rem', fontWeight: 700, color: item.color}}>
                 {item.metric}
               </div>
-              <div style={{ color: '#fff', fontWeight: 600, fontSize: '0.9rem'}}>{item.label}</div>
-              <p style={{ color: '#5a8aaa', fontSize: '0.85rem', lineHeight: '1.65' }}>{item.desc}</p>
+              <div style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.9rem'}}>{item.label}</div>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: '1.65' }}>{item.desc}</p>
             </div>
           ))}
         </div>
@@ -78,17 +78,17 @@ export default function Impact() {
             textAlign: 'center',
             position: 'relative',
             overflow: 'hidden',
-            background: 'linear-gradient(135deg, rgba(0,212,255,0.07) 0%, rgba(201,145,58,0.05) 100%)',
-            border: '1px solid rgba(0,212,255,0.14)'}}
+            background: 'linear-gradient(135deg, color-mix(in srgb, var(--accent-cyan) 7%, transparent) 0%, color-mix(in srgb, var(--accent-gold) 5%, transparent) 100%)',
+            border: '1px solid var(--border-medium)'}}
         >
           <h3
-            className="font-bold text-white"
+            className="font-bold text-[var(--text-primary)]"
             style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 'clamp(1.5rem, 3vw, 2.25rem)'}}
           >
             Ready to Map the{' '}
             <span className="gradient-text-cyan">Abyssal Unknown?</span>
           </h3>
-          <p style={{ color: '#7ab8d4',  maxWidth: '500px', margin: '0 auto 2rem', fontSize: '0.975rem', lineHeight: '1.7' }}>
+          <p style={{ color: 'var(--text-accent)',  maxWidth: '500px', margin: '0 auto 2rem', fontSize: '0.975rem', lineHeight: '1.7' }}>
             Request operator access to the OceanAtlas survey dashboard and begin
             planning your deep-ocean EM detection campaign.
           </p>
@@ -98,8 +98,8 @@ export default function Impact() {
               id="impact-signup-btn"
               style={{
                 padding: '0.875rem 2rem', borderRadius: '12px', fontWeight: 700,
-                background: 'linear-gradient(135deg, #00d4ff, #0099bb)',
-                color: '#01050f', textDecoration: 'none', fontSize: '0.95rem',
+                background: 'linear-gradient(135deg, var(--accent-cyan), var(--accent-cyan-hover))',
+                color: 'var(--bg-primary)', textDecoration: 'none', fontSize: '0.95rem',
                 transition: 'transform 0.2s'}}
               onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.04)'}
               onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
@@ -111,9 +111,9 @@ export default function Impact() {
               id="impact-login-btn"
               style={{
                 padding: '0.875rem 2rem', borderRadius: '12px', fontWeight: 700,
-                border: '1px solid rgba(0,212,255,0.3)', color: '#00d4ff',
+                border: '1px solid var(--border-medium)', color: 'var(--accent-cyan)',
                 textDecoration: 'none', fontSize: '0.95rem', transition: 'background 0.2s'}}
-              onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,212,255,0.08)'}
+              onMouseEnter={e => e.currentTarget.style.background = 'var(--border-light)'}
               onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
             >
               Sign In

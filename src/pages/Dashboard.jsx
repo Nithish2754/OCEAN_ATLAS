@@ -12,6 +12,7 @@ import {
   Clock,
 } from 'lucide-react';
 import LiveDepthChart from '../components/LiveDepthChart';
+import SensorTelemetryPanel from '../components/SensorTelemetryPanel';
 
 const initialSummary = {
   active_surveys: 3,
@@ -176,7 +177,7 @@ export default function Dashboard() {
   async function handleLogout() {
     try {
       await logout();
-      navigate('/login');
+      navigate('/');
     } catch {
       // silent
     }
@@ -224,27 +225,27 @@ export default function Dashboard() {
   return (
     <div
       className="min-h-screen"
-      style={{ background: 'linear-gradient(180deg, #01050f 0%, #030d1f 100%)' }}
+      style={{ background: 'linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%)' }}
     >
       <header
         className="sticky top-0 z-50"
         style={{
-          background: 'rgba(3,13,31,0.9)',
+          background: 'var(--bg-card)',
           backdropFilter: 'blur(16px)',
-          borderBottom: '1px solid rgba(0,212,255,0.08)',
+          borderBottom: '1px solid var(--border-light)',
         }}
       >
         <div className="container-app py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#00d4ff]/10 flex items-center justify-center">
-              <Waves size={18} className="text-[#00d4ff]" />
+            <div className="w-9 h-9 rounded-full flex items-center justify-center" style={{ background: 'var(--border-light)' }}>
+              <Waves size={18} className="text-[var(--accent-cyan)]" />
             </div>
             <span
-              className="font-bold text-lg text-white"
+              className="font-bold text-lg text-[var(--text-primary)]"
               style={{ fontFamily: "'Space Grotesk', sans-serif" }}
             >
-              Ocean<span className="text-[#00d4ff]">Atlas</span>
-              <span className="ml-2 text-[#3a6a85] font-normal text-sm">/ Dashboard</span>
+              Ocean<span className="text-[var(--accent-cyan)]">Atlas</span>
+              <span className="ml-2 text-[var(--text-muted)] font-normal text-sm">/ Dashboard</span>
             </span>
           </div>
 
@@ -260,11 +261,12 @@ export default function Dashboard() {
               <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
               {liveStatus}
             </div>
-            <div className="text-sm text-[#5a8aaa]">{displayName}</div>
+            <div className="text-sm text-[var(--text-muted)]">{displayName}</div>
             <button
               id="dashboard-logout-btn"
               onClick={handleLogout}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs text-[#3a6a85] hover:text-[#00d4ff] hover:bg-[#00d4ff]/05 transition-all duration-200 border border-transparent hover:border-[#00d4ff]/15"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs text-[var(--text-muted)] hover:text-[var(--accent-cyan)] transition-all duration-200 border border-transparent"
+              style={{ ':hover': { background: 'var(--border-light)', borderColor: 'var(--border-medium)' } }}
             >
               <LogOut size={14} />
               <span className="hidden sm:inline">Logout</span>
@@ -275,15 +277,15 @@ export default function Dashboard() {
 
       <main className="container-app dashboard-main">
         <div className="dashboard-welcome">
-          <p className="text-[#5a8aaa] text-sm mb-1">Welcome back,</p>
+          <p className="text-[var(--text-muted)] text-sm mb-1">Welcome back,</p>
           <h1
-            className="text-3xl md:text-4xl font-bold text-white"
+            className="text-3xl md:text-4xl font-bold text-[var(--text-primary)]"
             style={{ fontFamily: "'Space Grotesk', sans-serif" }}
           >
             {displayName}{' '}
-            <span className="text-[#00d4ff]">👋</span>
+            <span className="text-[var(--accent-cyan)]">👋</span>
           </h1>
-          <p className="text-[#3a6a85] text-sm mt-2">
+          <p className="text-[var(--text-muted)] text-sm mt-2">
             <Clock size={13} className="inline mr-1" />
             {new Date().toLocaleDateString('en-US', {
               weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
@@ -292,6 +294,8 @@ export default function Dashboard() {
         </div>
 
         <LiveDepthChart />
+
+        <SensorTelemetryPanel />
 
         <div className="dashboard-kpi-grid">
           {dashboardCards.map((card) => (
@@ -313,8 +317,8 @@ export default function Dashboard() {
               <div className="dashboard-kpi-value text-2xl font-bold" style={{ fontFamily: "'Space Grotesk', sans-serif", color: card.color }}>
                 {card.value}
               </div>
-              <div className="dashboard-kpi-label text-sm text-[#a0c4d8] font-medium">{card.label}</div>
-              <div className="dashboard-kpi-description text-xs text-[#3a6a85]">{card.sub}</div>
+              <div className="dashboard-kpi-label text-sm text-[var(--text-secondary)] font-medium">{card.label}</div>
+              <div className="dashboard-kpi-description text-xs text-[var(--text-muted)]">{card.sub}</div>
               <div
                 className="dashboard-kpi-status text-xs"
                 style={{ borderTop: `1px solid ${card.color}15`, color: `${card.color}99` }}
@@ -329,19 +333,19 @@ export default function Dashboard() {
           <div className="dashboard-panel glass-card rounded-2xl">
             <div className="dashboard-panel-header">
               <h2
-                className="text-lg font-bold text-white"
+                className="text-lg font-bold text-[var(--text-primary)]"
                 style={{ fontFamily: "'Space Grotesk', sans-serif" }}
               >
                 Recent Activity
               </h2>
-              <span className="text-xs text-[#3a6a85] px-2 py-1 rounded-full border border-[#00d4ff]/10">
+              <span className="text-xs text-[var(--text-muted)] px-2 py-1 rounded-full border" style={{ borderColor: 'var(--border-medium)' }}>
                 {isLoading ? 'Loading…' : 'Live data'}
               </span>
             </div>
             <div className="dashboard-activity-list">
               {activity.map((item, i) => (
-                <div key={`${item.time}-${i}`} className={`dashboard-activity-row ${i !== activity.length - 1 ? 'border-b border-[#00d4ff]/10' : ''}`}>
-                  <div className="text-xs text-[#3a6a85] font-mono pt-0.5">
+                <div key={`${item.time}-${i}`} className={`dashboard-activity-row ${i !== activity.length - 1 ? 'border-b' : ''}`} style={{ borderColor: 'var(--border-light)' }}>
+                  <div className="text-xs text-[var(--text-muted)] font-mono pt-0.5">
                     {item.time}
                   </div>
                   <div
@@ -355,7 +359,7 @@ export default function Dashboard() {
                           : '#00d4ff',
                     }}
                   />
-                  <p className="text-sm text-[#7ab8d4] leading-relaxed">{item.event}</p>
+                  <p className="text-sm text-[var(--text-accent)] leading-relaxed">{item.event}</p>
                 </div>
               ))}
             </div>
@@ -364,7 +368,7 @@ export default function Dashboard() {
           <div className="dashboard-panel glass-card rounded-2xl flex flex-col">
             <div className="dashboard-panel-header">
               <h2
-                className="text-lg font-bold text-white"
+                className="text-lg font-bold text-[var(--text-primary)]"
               style={{ fontFamily: "'Space Grotesk', sans-serif" }}
               >
                 System Overview
@@ -374,10 +378,10 @@ export default function Dashboard() {
               {defaultSystemSensors.map((item) => (
                 <div key={item.label} className="dashboard-sensor">
                   <div className="dashboard-sensor-meta text-xs">
-                    <span className="text-[#7ab8d4]">{item.label}</span>
+                    <span className="text-[var(--text-accent)]">{item.label}</span>
                     <span style={{ color: item.color }}>{item.status}</span>
                   </div>
-                  <div className="dashboard-sensor-bar rounded-full bg-[#0a1a2f] overflow-hidden">
+                  <div className="dashboard-sensor-bar rounded-full bg-[var(--bg-primary)] overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-500"
                       style={{ width: `${item.pct}%`, background: item.color }}
@@ -388,8 +392,8 @@ export default function Dashboard() {
             </div>
 
             <div
-              className="dashboard-connection rounded-xl text-xs text-center text-[#3a6a85]"
-              style={{ background: 'rgba(0,212,255,0.03)', border: '1px solid rgba(0,212,255,0.08)' }}
+              className="dashboard-connection rounded-xl text-xs text-center text-[var(--text-muted)]"
+              style={{ background: 'var(--border-light)', border: '1px solid var(--border-medium)' }}
             >
               {devices.length > 0
                 ? `${devices.filter((device) => device.status === 'online').length} device(s) connected to the live pipeline`

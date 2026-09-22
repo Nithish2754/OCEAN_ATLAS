@@ -69,8 +69,8 @@ export default function DepositTypes() {
       id="deposits"
       className="section-shell relative overflow-hidden"
       style={{
-        background: 'linear-gradient(180deg, #061428 0%, #030d1f 100%)',
-        borderBottom: '1px solid rgba(0,212,255,0.09)',
+        background: 'linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%)',
+        borderBottom: '1px solid var(--border-light)',
       }}
     >
       {/* Background glow */}
@@ -88,13 +88,13 @@ export default function DepositTypes() {
         <div className="section-heading">
           <p className="section-label">Target Deposit Types</p>
           <h2
-            className="font-bold text-white"
+            className="font-bold text-[var(--text-primary)]"
             style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 'clamp(1.75rem, 3vw, 2.75rem)'}}
           >
             Four Classes of{' '}
             <span className="gradient-text-gold">Deep-Sea Metal Wealth</span>
           </h2>
-          <p className="text-[#7ab8d4]" style={{ maxWidth: '600px', margin: '0 auto', fontSize: '0.975rem', lineHeight: '1.7' }}>
+          <p className="text-[var(--text-accent)]" style={{ maxWidth: '600px', margin: '0 auto', fontSize: '0.975rem', lineHeight: '1.7' }}>
             The OceanAtlas system is tuned to detect and differentiate between the four primary
             categories of metal-rich seabed deposits, each with distinct EM signatures, depths,
             and mineral compositions.
@@ -116,8 +116,8 @@ export default function DepositTypes() {
                 cursor: 'pointer',
                 transition: 'all 0.2s',
                 background: active === i ? `linear-gradient(135deg, ${d.accent}, ${d.accent}88)` : 'transparent',
-                color: active === i ? '#01050f' : '#7ab8d4',
-                border: active === i ? 'none' : '1px solid rgba(0,212,255,0.2)',
+                color: active === i ? 'var(--bg-primary)' : 'var(--text-accent)',
+                border: active === i ? 'none' : '1px solid var(--border-medium)',
                 transform: active === i ? 'scale(1.05)' : 'scale(1)'}}
             >
               <span style={{ marginRight: '0.4rem' }}>{d.icon}</span>
@@ -143,7 +143,7 @@ export default function DepositTypes() {
               <div
                 style={{
                   position: 'absolute', inset: 0,
-                  background: `linear-gradient(135deg, ${dep.accent}40 0%, transparent 60%, rgba(3,13,31,0.7) 100%)`}}
+                  background: `linear-gradient(135deg, ${dep.accent}40 0%, transparent 60%, color-mix(in srgb, var(--bg-primary) 70%, transparent) 100%)`}}
               />
               <div style={{ position: 'absolute', top: '1.5rem', left: '1.5rem' }}>
                 <span
@@ -161,16 +161,16 @@ export default function DepositTypes() {
             <div className="deposit-content">
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.35rem'}}>
                 <span style={{ fontSize: '2rem', filter: `drop-shadow(0 0 10px ${dep.accent})` }}>{dep.icon}</span>
-                <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.4rem', fontWeight: 700, color: '#fff' }}>
+                <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.4rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                   {dep.name}
                 </h3>
               </div>
 
-              <p style={{ fontSize: '0.8rem', color: '#5a8aaa', marginBottom: '0.8rem'}}>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.8rem'}}>
                 📍 {dep.location}
               </p>
 
-              <p style={{ color: '#7ab8d4', lineHeight: '1.7',  fontSize: '0.95rem', marginBottom: '1rem' }}>
+              <p style={{ color: 'var(--text-accent)', lineHeight: '1.7',  fontSize: '0.95rem', marginBottom: '1rem' }}>
                 {dep.description}
               </p>
 
@@ -183,12 +183,12 @@ export default function DepositTypes() {
                   <p style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700, color: dep.accent, marginBottom: '0.5rem'}}>
                   Why It Matters
                 </p>
-                <p style={{ fontSize: '0.875rem', color: '#a0c4d8', lineHeight: '1.65' }}>{dep.significance}</p>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: '1.65' }}>{dep.significance}</p>
               </div>
 
               {/* Key metals */}
               <div>
-                <p style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700, color: '#5a8aaa', marginBottom: '0.75rem'}}>
+                <p style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.75rem'}}>
                   Key Metals
                 </p>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>

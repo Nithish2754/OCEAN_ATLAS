@@ -17,9 +17,9 @@ function PasswordStrength({ password }) {
           {c.valid ? (
             <Check size={11} className="text-green-400" />
           ) : (
-            <X size={11} className="text-[#3a6a85]" />
+            <X size={11} className="text-[var(--text-muted)]" />
           )}
-          <span className={`text-xs ${c.valid ? 'text-green-400' : 'text-[#3a6a85]'}`}>
+          <span className={`text-xs ${c.valid ? 'text-green-400' : 'text-[var(--text-muted)]'}`}>
             {c.label}
           </span>
         </div>
@@ -72,17 +72,17 @@ export default function Signup() {
   }
 
   const inputStyle = {
-    background: 'rgba(0,212,255,0.04)',
-    border: '1px solid rgba(0,212,255,0.12)',
+    background: 'var(--border-light)',
+    border: '1px solid var(--border-medium)',
   };
-  const onFocus = (e) => (e.target.style.borderColor = 'rgba(0,212,255,0.4)');
-  const onBlur = (e) => (e.target.style.borderColor = 'rgba(0,212,255,0.12)');
-  const inputCls = 'auth-input w-full rounded-xl text-white text-sm outline-none transition-all duration-200 placeholder:text-[#2a4a5f]';
+  const onFocus = (e) => (e.target.style.borderColor = 'var(--accent-cyan)');
+  const onBlur = (e) => (e.target.style.borderColor = 'var(--border-medium)');
+  const inputCls = 'auth-input w-full rounded-xl text-[var(--text-primary)] text-sm outline-none transition-all duration-200 placeholder:text-[var(--text-muted)]';
 
   return (
     <div
       className="min-h-screen flex items-center justify-center relative isolate overflow-hidden px-4 py-12"
-      style={{ background: 'linear-gradient(180deg, #01050f 0%, #030d1f 60%, #061428 100%)' }}
+      style={{ background: 'linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 60%, var(--bg-tertiary) 100%)' }}
     >
       <div className="absolute inset-0 topo-bg opacity-20 z-0" />
       <div
@@ -93,24 +93,24 @@ export default function Signup() {
       <div
         className="auth-card relative z-10 w-full max-w-md"
         style={{
-          background: 'rgba(6,20,40,0.85)',
+          background: 'var(--bg-card)',
           backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(0,212,255,0.15)',
+          border: '1px solid var(--border-medium)',
           borderRadius: '24px',
         }}
       >
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-[#c9913a]/10 border border-[#c9913a]/20 flex items-center justify-center mb-4">
-            <Waves size={26} className="text-[#c9913a]" />
+          <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4" style={{ background: 'var(--border-light)', border: '1px solid var(--border-medium)' }}>
+            <Waves size={26} className="text-[var(--accent-gold)]" />
           </div>
           <h1
-            className="text-2xl font-bold text-white mb-1"
+            className="text-2xl font-bold text-[var(--text-primary)] mb-1"
             style={{ fontFamily: "'Space Grotesk', sans-serif" }}
           >
             Request Access
           </h1>
-          <p className="text-[#5a8aaa] text-sm text-center">
+          <p className="text-[var(--text-muted)] text-sm text-center">
             Create your OceanAtlas researcher account
           </p>
         </div>
@@ -127,7 +127,7 @@ export default function Signup() {
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="text-left">
-            <label className="block text-xs font-semibold text-[#5a8aaa] uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">
               Full Name
             </label>
             <input
@@ -145,7 +145,7 @@ export default function Signup() {
 
           {/* Email */}
           <div className="text-left">
-            <label className="block text-xs font-semibold text-[#5a8aaa] uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">
               Email Address
             </label>
             <input
@@ -163,7 +163,7 @@ export default function Signup() {
 
           {/* Password */}
           <div className="text-left">
-            <label className="block text-xs font-semibold text-[#5a8aaa] uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">
               Password
             </label>
             <div className="relative">
@@ -183,7 +183,7 @@ export default function Signup() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#3a6a85] hover:text-[#00d4ff] transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--accent-cyan)] transition-colors"
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -192,7 +192,7 @@ export default function Signup() {
           </div>
 
           <div className="text-left">
-            <label className="block text-xs font-semibold text-[#5a8aaa] uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">
               Confirm Password
             </label>
             <input
@@ -213,8 +213,8 @@ export default function Signup() {
             id="signup-submit-btn"
             type="submit"
             disabled={loading}
-            className="auth-submit w-full rounded-xl font-semibold text-[#01050f] flex items-center justify-center gap-2 transition-all duration-200 hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
-            style={{ background: 'linear-gradient(135deg, #c9913a 0%, #e8b25a 100%)' }}
+            className="auth-submit w-full rounded-xl font-semibold text-[var(--bg-primary)] flex items-center justify-center gap-2 transition-all duration-200 hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
+            style={{ background: 'linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-hover, #e8b25a) 100%)' }}
           >
             {loading ? (
               <span className="flex items-center gap-2">
@@ -232,14 +232,14 @@ export default function Signup() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-[#3a6a85]">
+        <p className="mt-6 text-center text-sm text-[var(--text-muted)]">
           Already have an account?{' '}
-          <Link to="/login" className="text-[#00d4ff] hover:text-white font-semibold transition-colors">
+          <Link to="/login" className="text-[var(--accent-cyan)] hover:text-[var(--text-primary)] font-semibold transition-colors">
             Sign in
           </Link>
         </p>
-        <p className="mt-4 text-center text-xs text-[#2a4a5f]">
-          <Link to="/" className="hover:text-[#5a8aaa] transition-colors">
+        <p className="mt-4 text-center text-xs text-[var(--text-muted)]">
+          <Link to="/" className="hover:text-[var(--text-secondary)] transition-colors">
             ← Back to OceanAtlas
           </Link>
         </p>
