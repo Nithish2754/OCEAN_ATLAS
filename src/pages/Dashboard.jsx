@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import LiveDepthChart from '../components/LiveDepthChart';
 import SensorTelemetryPanel from '../components/SensorTelemetryPanel';
+import ImageProcessingPanel from '../components/ImageProcessingPanel';
 
 const initialSummary = {
   active_surveys: 3,
@@ -37,6 +38,7 @@ export default function Dashboard() {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const activityRef = useRef(defaultRecentActivity);
+  const [activeTab, setActiveTab] = useState('sensors');
   const [summary, setSummary] = useState(initialSummary);
   const [activity, setActivity] = useState(defaultRecentActivity);
   const [devices, setDevices] = useState([]);
@@ -293,112 +295,46 @@ export default function Dashboard() {
           </p>
         </div>
 
-        <LiveDepthChart />
-
-        <SensorTelemetryPanel />
-
-        <div className="dashboard-kpi-grid">
-          {dashboardCards.map((card) => (
-            <div
-              key={card.id}
-              id={card.id}
-              className="dashboard-kpi glass-card rounded-2xl transition-all duration-300 hover:-translate-y-0.5 group"
-              style={{ borderColor: `${card.color}20` }}
+        {/* Main Content Section */}
+        <div className="flex flex-col gap-8 w-full mt-6">
+          
+          {/* Tab Navigation */}
+          <div className="flex justify-center gap-8 sm:gap-16">
+            <button
+              onClick={() => setActiveTab('sensors')}
+              className={`pb-3 px-2 text-[15px] font-medium transition-colors relative ${
+                activeTab === 'sensors' ? 'text-[var(--accent-cyan)]' : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+              }`}
             >
-              <div className="dashboard-kpi-header">
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center"
-                  style={{ background: `${card.color}12`, color: card.color }}
-                >
-                  {card.icon}
-                </div>
-                <TrendingUp size={14} className="dashboard-kpi-trend text-green-400" />
-              </div>
-              <div className="dashboard-kpi-value text-2xl font-bold" style={{ fontFamily: "'Space Grotesk', sans-serif", color: card.color }}>
-                {card.value}
-              </div>
-              <div className="dashboard-kpi-label text-sm text-[var(--text-secondary)] font-medium">{card.label}</div>
-              <div className="dashboard-kpi-description text-xs text-[var(--text-muted)]">{card.sub}</div>
-              <div
-                className="dashboard-kpi-status text-xs"
-                style={{ borderTop: `1px solid ${card.color}15`, color: `${card.color}99` }}
-              >
-                {card.trend}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="dashboard-lower-grid">
-          <div className="dashboard-panel glass-card rounded-2xl">
-            <div className="dashboard-panel-header">
-              <h2
-                className="text-lg font-bold text-[var(--text-primary)]"
-                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-              >
-                Recent Activity
-              </h2>
-              <span className="text-xs text-[var(--text-muted)] px-2 py-1 rounded-full border" style={{ borderColor: 'var(--border-medium)' }}>
-                {isLoading ? 'Loading…' : 'Live data'}
-              </span>
-            </div>
-            <div className="dashboard-activity-list">
-              {activity.map((item, i) => (
-                <div key={`${item.time}-${i}`} className={`dashboard-activity-row ${i !== activity.length - 1 ? 'border-b' : ''}`} style={{ borderColor: 'var(--border-light)' }}>
-                  <div className="text-xs text-[var(--text-muted)] font-mono pt-0.5">
-                    {item.time}
-                  </div>
-                  <div
-                    className="w-2 h-2 rounded-full shrink-0 mt-1"
-                    style={{
-                      background:
-                        item.type === 'success'
-                          ? '#6ee7b7'
-                          : item.type === 'alert'
-                          ? '#c9913a'
-                          : '#00d4ff',
-                    }}
-                  />
-                  <p className="text-sm text-[var(--text-accent)] leading-relaxed">{item.event}</p>
-                </div>
-              ))}
-            </div>
+              Sensor Processing
+              {activeTab === 'sensors' && (
+                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--accent-cyan)] shadow-[0_0_8px_var(--accent-cyan)] rounded-full" />
+              )}
+            </button>
+            <button
+              onClick={() => setActiveTab('camera')}
+              className={`pb-3 px-2 text-[15px] font-medium transition-colors relative ${
+                activeTab === 'camera' ? 'text-[var(--accent-cyan)]' : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+              }`}
+            >
+              Image Processing
+              {activeTab === 'camera' && (
+                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--accent-cyan)] shadow-[0_0_8px_var(--accent-cyan)] rounded-full" />
+              )}
+            </button>
           </div>
+          
+          {/* Content Area */}
+          <div className="w-full">
 
-          <div className="dashboard-panel glass-card rounded-2xl flex flex-col">
-            <div className="dashboard-panel-header">
-              <h2
-                className="text-lg font-bold text-[var(--text-primary)]"
-              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-              >
-                System Overview
-              </h2>
-            </div>
-            <div className="dashboard-sensors">
-              {defaultSystemSensors.map((item) => (
-                <div key={item.label} className="dashboard-sensor">
-                  <div className="dashboard-sensor-meta text-xs">
-                    <span className="text-[var(--text-accent)]">{item.label}</span>
-                    <span style={{ color: item.color }}>{item.status}</span>
-                  </div>
-                  <div className="dashboard-sensor-bar rounded-full bg-[var(--bg-primary)] overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all duration-500"
-                      style={{ width: `${item.pct}%`, background: item.color }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div
-              className="dashboard-connection rounded-xl text-xs text-center text-[var(--text-muted)]"
-              style={{ background: 'var(--border-light)', border: '1px solid var(--border-medium)' }}
-            >
-              {devices.length > 0
-                ? `${devices.filter((device) => device.status === 'online').length} device(s) connected to the live pipeline`
-                : 'Waiting for device telemetry to arrive'}
-            </div>
+        {activeTab === 'sensors' ? (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out flex flex-col gap-6">
+            <LiveDepthChart />
+            <SensorTelemetryPanel />
+          </div>
+        ) : (
+          <ImageProcessingPanel />
+        )}
           </div>
         </div>
       </main>

@@ -1,77 +1,67 @@
 import os
-import sys
 import time
-import requests
+import json
 import serial
+import threading
+import asyncio
 
-# Configuration
 ARDUINO_SERIAL_PORT = os.getenv("ARDUINO_SERIAL_PORT", "COM7")
 BAUD_RATE = 115200
-API_URL = os.getenv("BACKEND_HOST", "http://127.0.0.1:8000") + "/api/depth"
-DEVICE_ID = "ROV-3"
 
-def main():
-    print(f"[Bridge] Starting serial bridge on port {ARDUINO_SERIAL_PORT} at {BAUD_RATE} baud")
-    
-    try:
-        ser = serial.Serial(ARDUINO_SERIAL_PORT, BAUD_RATE, timeout=2)
-    except serial.SerialException as e:
-        print(f"[Bridge] ERROR: Could not open serial port {ARDUINO_SERIAL_PORT}: {e}")
-        print("[Bridge] Make sure the Arduino is connected, and the port is correct.")
-        sys.exit(1)
+def start_serial_bridge(telemetry_callback_coro, loop):
+    """
+    Starts a background thread to read JSON telemetry from the ESP32 via USB Serial.
+    telemetry_callback_coro: An async function that processes the parsed JSON payload.
+    loop: The FastAPI asyncio event loop.
+    """
+    def serial_loop():
+        print(f"[Bridge] Starting serial bridge on port {ARDUINO_SERIAL_PORT} at {BAUD_RATE} baud")
+        ser = None
+        while True:
+            try:
+                if ser is None or not ser.is_open:
+                    try:
+                        ser = serial.Serial(ARDUINO_SERIAL_PORT, BAUD_RATE, timeout=2)
+                        print("[Bridge] Connected successfully. Waiting for data...")
+                    except serial.SerialException as e:
+                        print(f"[Bridge] Waiting for port {ARDUINO_SERIAL_PORT}... (Please close PlatformIO Serial Monitor if open)")
+                        time.sleep(3)
+                        continue
 
-    print("[Bridge] Connected successfully. Waiting for data...")
-
-    while True:
-        try:
-            line = ser.readline().decode('utf-8').strip()
-            if not line:
-                continue
-
-            print(f"[Serial] {line}")
-
-            if line.startswith("DEPTH:"):
-                value_str = line.split("DEPTH:")[1].strip()
-                
-                # Check for "No echo / out of range"
-                if "No echo" in value_str or "out of range" in value_str:
-                    print("[Bridge] Out of range reading skipped.")
+                line = ser.readline().decode('utf-8', errors='ignore').strip()
+                if line:
+                    print(f"[Bridge Read] {line}", flush=True)
+                if not line:
                     continue
                 
-                try:
-                    depth_cm = float(value_str)
-                    if depth_cm < 0:
-                        raise ValueError("Negative depth")
-                        
-                    print(f"[Bridge] Sending depth: {depth_cm} cm")
-                    
-                    payload = {
-                        "device_id": DEVICE_ID,
-                        "depth_cm": depth_cm
-                    }
-                    
-                    response = requests.post(API_URL, json=payload, timeout=2)
-                    if response.status_code != 200:
-                        print(f"[Bridge] API Error: {response.status_code} {response.text}")
-                        
-                except ValueError:
-                    print(f"[Bridge] Invalid numeric depth value: {value_str}")
-                except requests.RequestException as e:
-                    print(f"[Bridge] Connection to FastAPI failed: {e}")
+                # Check for debug logs
+                if line.startswith("[") and not line.startswith("[{") and not line.startswith("[\""):
+                    print(f"[ESP32] {line}")
+                    continue
 
-        except serial.SerialException:
-            print("[Bridge] Serial connection lost. Attempting to reconnect in 5 seconds...")
-            ser.close()
-            time.sleep(5)
-            try:
-                ser = serial.Serial(ARDUINO_SERIAL_PORT, BAUD_RATE, timeout=2)
-                print("[Bridge] Reconnected.")
-            except:
-                pass
-        except KeyboardInterrupt:
-            print("\n[Bridge] Shutting down.")
-            ser.close()
-            break
-
-if __name__ == "__main__":
-    main()
+                # Parse JSON telemetry
+                if line.startswith("{"):
+                    try:
+                        payload = json.loads(line)
+                        # Dispatch to FastAPI event loop
+                        asyncio.run_coroutine_threadsafe(telemetry_callback_coro(payload), loop)
+                    except json.JSONDecodeError:
+                        print(f"[Bridge] Ignoring invalid JSON: {line}")
+                else:
+                    print(f"[ESP32 RAW] {line}")
+                    
+            except serial.SerialException:
+                print("[Bridge] Serial connection lost. Reconnecting in 5 seconds...")
+                if ser:
+                    try:
+                        ser.close()
+                    except:
+                        pass
+                ser = None
+                time.sleep(5)
+            except Exception as e:
+                print(f"[Bridge] Unexpected error: {e}")
+                time.sleep(1)
+                
+    thread = threading.Thread(target=serial_loop, daemon=True, name="SerialBridgeThread")
+    thread.start()

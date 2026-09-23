@@ -7,8 +7,14 @@ from datetime import datetime, timezone
 from typing import Any
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, status
+from fastapi.responses import StreamingResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, ValidationError, field_validator
+from serial_bridge import start_serial_bridge
+from yolo_stream import generate_frames
+from detection_store import store
+from report_generator import generate_pdf_report
+import os
 
 
 # ---------------------------------------------------------------------------
@@ -151,6 +157,7 @@ manager = LiveConnectionManager()
 # Separate client sets for specialised channels
 depth_clients: set[WebSocket] = set()
 sensor_clients: set[WebSocket] = set()  # NEW: full telemetry for SensorTelemetryPanel
+detection_clients: set[WebSocket] = set()
 
 
 # ---------------------------------------------------------------------------
@@ -215,6 +222,7 @@ def derive_anomaly_confidence(deviation_percentage: float) -> float:
 
 async def broadcast_to_sensor_clients(message: dict[str, Any]) -> None:
     """Broadcast a telemetry message to all /ws/sensors subscribers."""
+    print(f"[Broadcast] Sending telemetry to {len(sensor_clients)} sensor clients", flush=True)
     dead: set[WebSocket] = set()
     for client in list(sensor_clients):
         try:
@@ -330,6 +338,13 @@ def process_reading(reading: SensorReading) -> dict[str, Any]:
 # REST endpoints
 # ---------------------------------------------------------------------------
 
+@app.get("/api/video_feed")
+async def video_feed():
+    return StreamingResponse(
+        generate_frames(), 
+        media_type="multipart/x-mixed-replace; boundary=frame"
+    )
+
 @app.get("/health")
 async def health() -> dict[str, str]:
     return {"status": "ok"}
@@ -398,6 +413,43 @@ async def get_activity(limit: int = 20) -> dict[str, list[dict[str, Any]]]:
 async def get_latest_map() -> dict[str, Any]:
     return latest_map
 
+@app.get("/api/detections/summary")
+async def get_detection_summary():
+    return store.get_summary()
+
+@app.get("/api/detections")
+async def get_detections():
+    return {"history": store.get_history()}
+
+@app.post("/api/detections/reset")
+async def reset_detections():
+    store.reset_session()
+    return {"status": "ok"}
+
+@app.delete("/api/detections/{detection_id}")
+async def delete_detection(detection_id: str):
+    success = store.delete_detection(detection_id)
+    if success:
+        return {"status": "ok"}
+    from fastapi import HTTPException
+    raise HTTPException(status_code=404, detail="Detection not found")
+
+@app.get("/api/detections/evidence/{filename}")
+async def get_detection_evidence(filename: str):
+    file_path = os.path.join(store.evidence_dir, filename)
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    from fastapi import HTTPException
+    raise HTTPException(status_code=404, detail="Evidence not found")
+
+@app.get("/api/detections/report")
+async def get_detection_report():
+    import tempfile
+    temp_dir = tempfile.gettempdir()
+    pdf_path = os.path.join(temp_dir, f"oceanatlas_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf")
+    generate_pdf_report(pdf_path)
+    return FileResponse(pdf_path, media_type="application/pdf", filename="oceanatlas_detection_report.pdf")
+
 
 # ---------------------------------------------------------------------------
 # WebSocket endpoints
@@ -414,6 +466,16 @@ async def depth_websocket(websocket: WebSocket):
     except WebSocketDisconnect:
         print("[WebSocket] Client disconnected from live depth data")
         depth_clients.discard(websocket)
+
+@app.websocket("/ws/detections")
+async def detections_websocket(websocket: WebSocket):
+    await websocket.accept()
+    detection_clients.add(websocket)
+    try:
+        while True:
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        detection_clients.discard(websocket)
 
 
 @app.websocket("/ws/sensors")
@@ -605,13 +667,78 @@ async def ingest_socket(websocket: WebSocket, device_id: str, token: str | None 
 
 @app.on_event("startup")
 async def bootstrap_seed_data() -> None:
-    seed_activity = [
-        {"time": "14:32", "event": "ROV-3 fine scan completed — Zone CCZ-04-B", "type": "success"},
-        {"time": "13:15", "event": "EM anomaly flagged at 5°12'N, 152°48'W — Mn nodule signature", "type": "alert"},
-        {"time": "11:48", "event": "Metal-Priority Map CCZ-04 exported to research portal", "type": "info"},
-    ]
-    activity_store.extend(seed_activity)
-    readings_store.extend([
-        {"device_id": "ROV-3", "status": "online", "last_seen": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "deviation_percentage": 18.4, "anomaly_flag": True, "anomaly_confidence": 0.76},
-        {"device_id": "ROV-1", "status": "online", "last_seen": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "deviation_percentage": 9.2, "anomaly_flag": False, "anomaly_confidence": 0.12},
-    ])
+    pass
+
+@app.on_event("startup")
+async def start_detection_broadcaster():
+    async def broadcast_loop():
+        while True:
+            record = await store.new_detections.get()
+            dead_clients = set()
+            for client in list(detection_clients):
+                try:
+                    await client.send_json({"type": "new_detection", "record": record})
+                except Exception:
+                    dead_clients.add(client)
+            for c in dead_clients:
+                detection_clients.discard(c)
+    asyncio.create_task(broadcast_loop())
+
+
+async def process_serial_telemetry(payload: dict) -> None:
+    import traceback
+    try:
+        print(f"[Serial Bridge] Received payload: {payload}", flush=True)
+        try:
+            reading = SensorReading.model_validate(payload)
+        except Exception as e:
+            print(f"[Serial Bridge] Invalid payload: {e}")
+            return
+
+        processed = process_reading(reading)
+        device_id = processed["device_id"]
+        ts = processed["timestamp"]
+        ts_short = ts[11:19] if len(ts) >= 19 else ts
+
+        # Broadcast to /ws/live
+        await manager.broadcast({
+            "type": "reading",
+            "device_id": device_id,
+            "anomaly": processed["anomaly_flag"],
+            "anomaly_confidence": processed["anomaly_confidence"],
+            "timestamp": ts,
+            "message": processed["message"],
+            "anomaly_count": sum(1 for item in readings_store if item.get("anomaly_flag")),
+            "last_map": latest_map.get("map_id", "CCZ-04"),
+            "system_status": "Nominal" if sum(1 for item in readings_store if item.get("anomaly_flag")) < 10 else "Review",
+        })
+
+        # Forward distance_cm to /ws/depth
+        if reading.distance_cm is not None and reading.distance_cm >= 0:
+            await broadcast_depth_to_depth_clients(device_id, reading.distance_cm, ts_short)
+
+        # Broadcast full telemetry to /ws/sensors
+        telemetry_msg = {
+            "type": "telemetry",
+            "device_id": device_id,
+            "timestamp": ts,
+            "metal_detected": processed["metal_detected"],
+            "metal_voltage": processed["metal_voltage"],
+            "distance_cm": processed["distance_cm"],
+            "accel_x": processed["accel_x"],
+            "accel_y": processed["accel_y"],
+            "accel_z": processed["accel_z"],
+            "latitude": processed["latitude"],
+            "longitude": processed["longitude"],
+        }
+        latest_telemetry[device_id] = telemetry_msg
+        await broadcast_to_sensor_clients(telemetry_msg)
+    except Exception as e:
+        print(f"[Serial Bridge] FATAL ERROR in callback: {e}", flush=True)
+        traceback.print_exc()
+
+
+@app.on_event("startup")
+async def startup_serial_service() -> None:
+    loop = asyncio.get_running_loop()
+    start_serial_bridge(process_serial_telemetry, loop)

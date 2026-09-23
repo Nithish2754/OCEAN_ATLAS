@@ -14,6 +14,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Cpu, Radar, Waves, Zap, Activity } from 'lucide-react';
+import ROV3DViewer from './ROV3DViewer';
+import MetalHeatmap from './MetalHeatmap';
 
 const OFFLINE_TIMEOUT_MS = 6000;   // mark ROV offline if no data for 6 s
 const MAX_WS_RETRY_MS    = 5000;   // WebSocket reconnect interval
@@ -38,10 +40,38 @@ export default function SensorTelemetryPanel() {
   const [detectCount, setDetectCount] = useState(0);
   const prevMetalRef     = useRef(null);
 
-  // WebSocket refs
+  const [heatmapPoints,  setHeatmapPoints]  = useState([]);
+
   const wsRef            = useRef(null);
   const retryRef         = useRef(null);
   const offlineTimerRef  = useRef(null);
+
+  // ── MOCK DATA FOR 3D VIEWER TESTING ───────────────────────────────────────
+  const MOCK_3D = false; // Set to true to test 3D Viewer
+
+  useEffect(() => {
+    if (!MOCK_3D) return;
+    
+    let t = 0;
+    const interval = setInterval(() => {
+      t += 0.05;
+      
+      // Simulate an ROV swaying in the water
+      const pitchSway = Math.sin(t) * 0.4;
+      const rollSway = Math.cos(t * 0.6) * 0.4;
+      
+      setAccel({
+        x: pitchSway,
+        y: rollSway,
+        z: 1.0
+      });
+      setWsStatus('Connected');
+      setRovOnline(true);
+    }, 50);
+
+    return () => clearInterval(interval);
+  }, []);
+  // ──────────────────────────────────────────────────────────────────────────
 
   // ── Offline watchdog ──────────────────────────────────────────────────────
   const resetOfflineTimer = () => {
@@ -101,6 +131,18 @@ export default function SensorTelemetryPanel() {
               y: msg.accel_y ?? null,
               z: msg.accel_z ?? null,
             });
+
+            if (msg.latitude !== undefined && msg.longitude !== undefined) {
+              setHeatmapPoints(prev => {
+                const newPoint = {
+                  lat: msg.latitude,
+                  lon: msg.longitude,
+                  voltage: msg.metal_voltage ?? 0,
+                  detected: msg.metal_detected ?? false
+                };
+                return [...prev.slice(-399), newPoint]; // Keep last 400 points
+              });
+            }
           }
         } catch {
           // ignore malformed frames
@@ -190,6 +232,9 @@ export default function SensorTelemetryPanel() {
         </div>
       </div>
 
+      {/* ── 3D Attitude Viewer ── */}
+      <ROV3DViewer accel={accel} wsStatus={wsStatus} />
+
       {/* ── Telemetry card grid ── */}
       <div className="telemetry-grid">
 
@@ -219,19 +264,9 @@ export default function SensorTelemetryPanel() {
           )}
         </div>
 
-        {/* 2. Metal Sensor Voltage */}
-        <div className="telemetry-card glass-card rounded-2xl" id="metal-voltage-card">
-          <div className="telemetry-card-icon" style={{ color: '#c9913a' }}>
-            <Activity size={20} />
-          </div>
-          <div className="telemetry-card-label">Metal Signal</div>
-          <div className="telemetry-card-value" style={{ color: '#c9913a' }}>
-            {metalVoltage === null ? '—' : `${fmt(metalVoltage, 3)} V`}
-          </div>
-          <div className="telemetry-card-sub">
-            Threshold: 0.300 V
-          </div>
-        </div>
+        {/* 2. Metal Presence Heatmap */}
+        <MetalHeatmap points={heatmapPoints} />
+
 
         {/* 3. Distance / Depth */}
         <div className="telemetry-card glass-card rounded-2xl" id="distance-card">
