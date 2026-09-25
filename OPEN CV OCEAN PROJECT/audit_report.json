@@ -1,0 +1,86 @@
+{
+  "source_images": {
+    "polymetallic_nodules": 8,
+    "cobalt_rich_crust": 5,
+    "hydrothermal_sulphide": 8
+  },
+  "prepared_label_files_by_split": {
+    "train": 152,
+    "val": 5
+  },
+  "class_counts_by_split": {
+    "train": {
+      "polymetallic_nodules": {
+        "image_count": 52,
+        "box_count": 52
+      },
+      "cobalt_rich_crust": {
+        "image_count": 48,
+        "box_count": 72
+      },
+      "hydrothermal_sulphide": {
+        "image_count": 52,
+        "box_count": 52
+      }
+    },
+    "val": {
+      "polymetallic_nodules": {
+        "image_count": 2,
+        "box_count": 2
+      },
+      "cobalt_rich_crust": {
+        "image_count": 1,
+        "box_count": 1
+      },
+      "hydrothermal_sulphide": {
+        "image_count": 2,
+        "box_count": 2
+      }
+    },
+    "test": {
+      "polymetallic_nodules": {
+        "image_count": 0,
+        "box_count": 0
+      },
+      "cobalt_rich_crust": {
+        "image_count": 0,
+        "box_count": 0
+      },
+      "hydrothermal_sulphide": {
+        "image_count": 0,
+        "box_count": 0
+      }
+    }
+  },
+  "has_test_split": false,
+  "classes": {
+    "polymetallic_nodules": {
+      "class_id": 0,
+      "image_count": 54,
+      "box_count": 54,
+      "mean_width": 0.779401518518518,
+      "mean_height": 0.8120455370370371,
+      "mean_area": 0.6314474519779076,
+      "mean_aspect": 0.9630157045863585
+    },
+    "cobalt_rich_crust": {
+      "class_id": 1,
+      "image_count": 49,
+      "box_count": 73,
+      "mean_width": 0.5991780821917813,
+      "mean_height": 0.7043835616438361,
+      "mean_area": 0.4524164383561639,
+      "mean_aspect": 0.8341751634434785
+    },
+    "hydrothermal_sulphide": {
+      "class_id": 2,
+      "image_count": 54,
+      "box_count": 54,
+      "mean_width": 0.7026979629629628,
+      "mean_height": 0.7466072407407404,
+      "mean_area": 0.5358931036742042,
+      "mean_aspect": 0.9602924505312989
+    }
+  },
+  "invalid_label_count": 0
+}

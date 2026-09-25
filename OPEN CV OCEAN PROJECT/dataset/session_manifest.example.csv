@@ -1,0 +1,5 @@
+image,session,split
+polymetallic_nodules/example_001.jpg,polymetallic_dive_01,train
+cobalt_rich_crust/example_001.jpg,cobalt_dive_01,train
+hydrothermal_sulphides/example_001.jpg,sulphide_dive_01,val
+plain_sediment_unclassified/example_001.jpg,negative_dive_01,test

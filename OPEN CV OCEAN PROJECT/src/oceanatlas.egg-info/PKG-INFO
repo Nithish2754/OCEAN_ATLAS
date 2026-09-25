@@ -1,0 +1,5 @@
+Metadata-Version: 2.4
+Name: oceanatlas
+Version: 0.1.0
+Summary: Real-time underwater deposit detection with OpenCV and YOLO
+Requires-Python: <3.13,>=3.11

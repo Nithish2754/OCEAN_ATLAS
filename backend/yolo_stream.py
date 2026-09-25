@@ -19,12 +19,12 @@ async def generate_frames():
     Asynchronous generator that captures webcam frames,
     runs YOLO detection, and yields MJPEG encoded frames.
     """
-    # Try to open external webcam (index 1) first
-    cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+    # Try to open built-in webcam (index 0)
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
     
     if not cap.isOpened():
-        print("[YOLO Stream] External webcam not found, falling back to built-in webcam.")
-        cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+        print("[YOLO Stream] Built-in webcam not found, falling back to external webcam.")
+        cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
         
     if not cap.isOpened():
         print("[YOLO Stream] Error: Could not open any webcam.")

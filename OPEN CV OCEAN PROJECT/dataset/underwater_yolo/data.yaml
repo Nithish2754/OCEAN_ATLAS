@@ -1,0 +1,8 @@
+path: dataset/underwater_yolo
+train: images/train
+val: images/val
+names:
+  0: polymetallic_nodules
+  1: cobalt_rich_crust
+  2: hydrothermal_sulphide
+  3: metal
