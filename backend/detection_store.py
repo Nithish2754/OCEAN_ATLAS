@@ -12,12 +12,14 @@ class DetectionStore:
         self.class_map = {
             "polymetallic_nodules": "Polymetallic Nodules",
             "cobalt_rich_crust": "Cobalt-Rich Crusts",
-            "hydrothermal_sulphide": "Hydrothermal Sulphides"
+            "hydrothermal_sulphide": "Hydrothermal Sulphides",
+            "metal": "Metal"
         }
         self.class_counts: Dict[str, int] = {
             "Polymetallic Nodules": 0,
             "Cobalt-Rich Crusts": 0,
-            "Hydrothermal Sulphides": 0
+            "Hydrothermal Sulphides": 0,
+            "Metal": 0
         }
         # To prevent spam: class name -> timestamp of last recorded detection
         self.last_detection_time: Dict[str, float] = {}

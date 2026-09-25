@@ -232,9 +232,6 @@ export default function SensorTelemetryPanel() {
         </div>
       </div>
 
-      {/* ── 3D Attitude Viewer ── */}
-      <ROV3DViewer accel={accel} wsStatus={wsStatus} />
-
       {/* ── Telemetry card grid ── */}
       <div className="telemetry-grid">
 
@@ -264,11 +261,7 @@ export default function SensorTelemetryPanel() {
           )}
         </div>
 
-        {/* 2. Metal Presence Heatmap */}
-        <MetalHeatmap points={heatmapPoints} />
-
-
-        {/* 3. Distance / Depth */}
+        {/* 2. Distance / Depth */}
         <div className="telemetry-card glass-card rounded-2xl" id="distance-card">
           <div className="telemetry-card-icon" style={{ color: 'var(--accent-cyan)' }}>
             <Waves size={20} />
@@ -280,7 +273,7 @@ export default function SensorTelemetryPanel() {
           <div className="telemetry-card-sub">HC-SR04 ultrasonic</div>
         </div>
 
-        {/* 4. MPU6050 Acceleration */}
+        {/* 3. MPU6050 Acceleration */}
         <div className="telemetry-card glass-card rounded-2xl" id="imu-card">
           <div className="telemetry-card-icon" style={{ color: '#a78bfa' }}>
             <Cpu size={20} />
@@ -302,7 +295,7 @@ export default function SensorTelemetryPanel() {
           </div>
         </div>
 
-        {/* 5. Device Status */}
+        {/* 4. Device Status */}
         <div className="telemetry-card glass-card rounded-2xl" id="device-status-card">
           <div
             className="telemetry-card-icon"
@@ -322,6 +315,14 @@ export default function SensorTelemetryPanel() {
           </div>
         </div>
 
+      </div>
+
+      {/* ── 3D Attitude Viewer ── */}
+      <ROV3DViewer accel={accel} wsStatus={wsStatus} />
+
+      {/* ── Metal Presence Heatmap ── */}
+      <div className="mt-6">
+        <MetalHeatmap points={heatmapPoints} />
       </div>
     </div>
   );

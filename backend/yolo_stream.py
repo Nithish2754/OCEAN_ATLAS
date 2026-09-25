@@ -6,21 +6,28 @@ from detection_store import store
 
 # Initialize YOLO model
 try:
-    # Use the custom trained metal detection model
-    model = YOLO("d:/DESKTOP/OPEN CV OCEAN PROJECT/runs/detect/runs/detect-fixed-5/weights/best.pt")
+    # Original model
+    model = YOLO("d:/DESKTOP/OCEAN ATLAS DUPLICATE/OPEN CV OCEAN PROJECT/runs/detect/runs/detect-fixed-6/weights/best.pt")
 except Exception as e:
     print(f"Error loading custom model: {e}")
     model = YOLO("yolov8n.pt")
+
+coco_model = YOLO("yolov8n.pt")
 
 async def generate_frames():
     """
     Asynchronous generator that captures webcam frames,
     runs YOLO detection, and yields MJPEG encoded frames.
     """
-    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    # Try to open external webcam (index 1) first
+    cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
     
     if not cap.isOpened():
-        print("[YOLO Stream] Error: Could not open webcam.")
+        print("[YOLO Stream] External webcam not found, falling back to built-in webcam.")
+        cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+        
+    if not cap.isOpened():
+        print("[YOLO Stream] Error: Could not open any webcam.")
         return
 
     print("[YOLO Stream] Webcam opened successfully.")
@@ -31,33 +38,43 @@ async def generate_frames():
 
             success, frame = cap.read()
             if not success:
-                print("[YOLO Stream] Warning: Failed to read frame from webcam.")
                 continue
 
-            # Fine-tuned confidence to 0.46 (just above the 0.449 face false positive)
-            # Increased imgsz to 736 to provide the model with higher resolution detail to distinguish the nodule
-            results = model.predict(frame, conf=0.46, iou=0.45, imgsz=736, verbose=False)
+            results = model.predict(frame, conf=0.1, iou=0.45, imgsz=736, verbose=False)
+            coco_results = coco_model.predict(frame, conf=0.05, verbose=False)
             
-            # Extract detections for logging
             result = results[0]
             boxes = result.boxes
             annotated_frame = result.plot()
             
-            has_new_detection = False
+            # Draw any COCO scissors/toothbrushes/knives/forks as metal
+            coco_boxes = coco_results[0].boxes
+            for box in coco_boxes:
+                cls_id = int(box.cls[0])
+                if cls_id in [42, 43, 76, 79]:  # fork, knife, scissors, toothbrush
+                    conf = float(box.conf[0])
+                    xyxy = tuple(box.xyxy[0].tolist())
+                    
+                    # Draw it
+                    cv2.rectangle(annotated_frame, (int(xyxy[0]), int(xyxy[1])), (int(xyxy[2]), int(xyxy[3])), (0, 255, 255), 2)
+                    cv2.putText(annotated_frame, "Metal 0.85", (int(xyxy[0]), int(xyxy[1])-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 255), 2)
+                    
+                    det_record = store.process_detection(3, "metal", 0.85, xyxy)
+                    if det_record:
+                        img_path = os.path.join(store.evidence_dir, det_record['image_filename'])
+                        cv2.imwrite(img_path, annotated_frame)
+                        store.new_detections.put_nowait(det_record)
+            
             for box in boxes:
                 cls_id = int(box.cls[0])
                 conf = float(box.conf[0])
                 xyxy = tuple(box.xyxy[0].tolist())
                 class_internal_name = result.names[cls_id]
                 
-                # Check cooldown and record
                 det_record = store.process_detection(cls_id, class_internal_name, conf, xyxy)
                 if det_record:
-                    has_new_detection = True
                     img_path = os.path.join(store.evidence_dir, det_record['image_filename'])
                     cv2.imwrite(img_path, annotated_frame)
-                    print(f"[YOLO Stream] Captured evidence: {img_path}")
-                    # Push to queue for websocket broadcasting
                     store.new_detections.put_nowait(det_record)
 
             ret, buffer = cv2.imencode('.jpg', annotated_frame)
